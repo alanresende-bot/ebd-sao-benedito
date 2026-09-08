@@ -1,0 +1,279 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Levantamento EBD - ADBH Regional São Benedito</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .glass {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-800 min-h-screen py-6 px-3 sm:px-6">
+
+  <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100">
+    
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white p-6 sm:p-8 relative">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500 opacity-10 rounded-full blur-2xl pointer-events-none"></div>
+      <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-200 text-xs font-semibold rounded-full mb-2 tracking-wide uppercase">
+        ADBH — Regional São Benedito
+      </span>
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Levantamento Geral da EBD</h1>
+      <p class="text-blue-200 text-xs sm:text-sm mt-1">Cadastro unificado de Superintendência, Classes e Professores</p>
+    </div>
+
+    <!-- Form -->
+    <form id="ebdForm" class="p-6 sm:p-8 space-y-8" onsubmit="submitForm(event)">
+      
+      <!-- Seção 1: Congregação -->
+      <div class="space-y-3">
+        <label class="block text-sm font-bold text-slate-700 uppercase tracking-wider">1. Selecione a Congregação</label>
+        <select id="congregacao" required class="w-full p-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none bg-slate-50 text-slate-800 font-medium transition">
+          <option value="">Selecione uma das 12 congregações...</option>
+          <option value="Sede Regional">Sede Regional</option>
+          <option value="Congregação 02">Congregação 02</option>
+          <option value="Congregação 03">Congregação 03</option>
+          <option value="Congregação 04">Congregação 04</option>
+          <option value="Congregação 05">Congregação 05</option>
+          <option value="Congregação 06">Congregação 06</option>
+          <option value="Congregação 07">Congregação 07</option>
+          <option value="Congregação 08">Congregação 08</option>
+          <option value="Congregação 09">Congregação 09</option>
+          <option value="Congregação 10">Congregação 10</option>
+          <option value="Congregação 11">Congregação 11</option>
+          <option value="Congregação 12">Congregação 12</option>
+        </select>
+      </div>
+
+      <!-- Seção 2: Superintendentes -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+          <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider">2. Superintendente(s) Local(ais)</h2>
+          <button type="button" onclick="addSuperintendente()" class="text-xs font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 py-2 px-3 rounded-lg transition border border-blue-200">
+            + Adicionar Superintendente
+          </button>
+        </div>
+
+        <div id="superintendentes-list" class="space-y-3">
+          <!-- Card de Superintendente (Template padrão) -->
+          <div class="super-item p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3 relative">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Nome Completo</label>
+                <input type="text" name="super_nome" required placeholder="Nome do Superintendente" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">WhatsApp / Telefone</label>
+                <input type="tel" name="super_contato" required placeholder="(31) 99999-9999" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Data de Nascimento</label>
+                <input type="date" name="super_nasc" required class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção 3: Classes e Professores -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+          <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider">3. Classes & Professores</h2>
+          <button type="button" onclick="addClasse()" class="text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 py-2 px-3 rounded-lg transition border border-emerald-200">
+            + Adicionar Classe
+          </button>
+        </div>
+
+        <div id="classes-list" class="space-y-4">
+          <!-- Card de Classe (Template padrão) -->
+          <div class="classe-item p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Classe / Faixa Etária (CPAD)</label>
+                <select name="classe_faixa" required class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                  <option value="">Selecione a Classe...</option>
+                  <option value="Berçário (0 a 2 anos)">Berçário (0 a 2 anos)</option>
+                  <option value="Maternal (3 e 4 anos)">Maternal (3 e 4 anos)</option>
+                  <option value="Jardim de Infância (5 e 6 anos)">Jardim de Infância (5 e 6 anos)</option>
+                  <option value="Primários (7 e 8 anos)">Primários (7 e 8 anos)</option>
+                  <option value="Juniores (9 e 10 anos)">Juniores (9 e 10 anos)</option>
+                  <option value="Pré-Adolescentes (11 e 12 anos)">Pré-Adolescentes (11 e 12 anos)</option>
+                  <option value="Adolescentes (13 e 14 anos)">Adolescentes (13 e 14 anos)</option>
+                  <option value="Juvenis (15 a 17 anos)">Juvenis (15 a 17 anos)</option>
+                  <option value="Jovens (18+ anos)">Jovens (18+ anos)</option>
+                  <option value="Adultos">Adultos</option>
+                  <option value="Discipulado / Novos Convertidos">Discipulado / Novos Convertidos</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Nome da Turma / Sala (Opcional)</label>
+                <input type="text" name="classe_nome" placeholder="Ex: Classe Bereia" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+            </div>
+
+            <div class="border-t border-slate-200 pt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Nome do Professor</label>
+                <input type="text" name="prof_nome" required placeholder="Nome do Professor" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">WhatsApp / Telefone</label>
+                <input type="tel" name="prof_contato" required placeholder="(31) 99999-9999" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Data de Nascimento</label>
+                <input type="date" name="prof_nasc" required class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" id="btnSubmit" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-4 rounded-xl shadow-lg transition duration-200 text-base flex items-center justify-center space-x-2">
+        <span id="btnText">Enviar Informações</span>
+        <div id="btnSpinner" class="hidden w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+      </button>
+
+    </form>
+  </div>
+
+  <!-- Script JS -->
+  <script>
+    // Cole a URL do Web App do Google Apps Script aqui
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwK0x8D9VscqSQoljJ_fW41UmNYKb9oNimcUuaL3xJv8j7zMpF3IBLDbxWXWoij_kog/exec';
+
+    function addSuperintendente() {
+      const list = document.getElementById('superintendentes-list');
+      const div = document.createElement('div');
+      div.className = 'super-item p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3 relative';
+      div.innerHTML = `
+        <button type="button" onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1 bg-red-50 rounded">Remover</button>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Nome Completo</label>
+            <input type="text" name="super_nome" required placeholder="Nome do Superintendente" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">WhatsApp / Telefone</label>
+            <input type="tel" name="super_contato" required placeholder="(31) 99999-9999" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Data de Nascimento</label>
+            <input type="date" name="super_nasc" required class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+        </div>
+      `;
+      list.appendChild(div);
+    }
+
+    function addClasse() {
+      const list = document.getElementById('classes-list');
+      const div = document.createElement('div');
+      div.className = 'classe-item p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3 relative';
+      div.innerHTML = `
+        <button type="button" onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1 bg-red-50 rounded">Remover</button>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Classe / Faixa Etária (CPAD)</label>
+            <select name="classe_faixa" required class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              <option value="">Selecione a Classe...</option>
+              <option value="Berçário (0 a 2 anos)">Berçário (0 a 2 anos)</option>
+              <option value="Maternal (3 e 4 anos)">Maternal (3 e 4 anos)</option>
+              <option value="Jardim de Infância (5 e 6 anos)">Jardim de Infância (5 e 6 anos)</option>
+              <option value="Primários (7 e 8 anos)">Primários (7 e 8 anos)</option>
+              <option value="Juniores (9 e 10 anos)">Juniores (9 e 10 anos)</option>
+              <option value="Pré-Adolescentes (11 e 12 anos)">Pré-Adolescentes (11 e 12 anos)</option>
+              <option value="Adolescentes (13 e 14 anos)">Adolescentes (13 e 14 anos)</option>
+              <option value="Juvenis (15 a 17 anos)">Juvenis (15 a 17 anos)</option>
+              <option value="Jovens (18+ anos)">Jovens (18+ anos)</option>
+              <option value="Adultos">Adultos</option>
+              <option value="Discipulado / Novos Convertidos">Discipulado / Novos Convertidos</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Nome da Turma / Sala (Opcional)</label>
+            <input type="text" name="classe_nome" placeholder="Ex: Classe Bereia" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+        </div>
+        <div class="border-t border-slate-200 pt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Nome do Professor</label>
+            <input type="text" name="prof_nome" required placeholder="Nome do Professor" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">WhatsApp / Telefone</label>
+            <input type="tel" name="prof_contato" required placeholder="(31) 99999-9999" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Data de Nascimento</label>
+            <input type="date" name="prof_nasc" required class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+        </div>
+      `;
+      list.appendChild(div);
+    }
+
+    async function submitForm(e) {
+      e.preventDefault();
+      
+      const btnText = document.getElementById('btnText');
+      const btnSpinner = document.getElementById('btnSpinner');
+      const btnSubmit = document.getElementById('btnSubmit');
+
+      btnText.innerText = "Enviando...";
+      btnSpinner.classList.remove('hidden');
+      btnSubmit.disabled = true;
+
+      const congregacao = document.getElementById('congregacao').value;
+
+      // Extrair Superintendentes
+      const supers = [];
+      document.querySelectorAll('.super-item').forEach(el => {
+        supers.push({
+          nome: el.querySelector('[name="super_nome"]').value,
+          contato: el.querySelector('[name="super_contato"]').value,
+          nasc: el.querySelector('[name="super_nasc"]').value
+        });
+      });
+
+      // Extrair Classes
+      const classes = [];
+      document.querySelectorAll('.classe-item').forEach(el => {
+        classes.push({
+          faixa: el.querySelector('[name="classe_faixa"]').value,
+          nomeTurma: el.querySelector('[name="classe_nome"]').value,
+          profNome: el.querySelector('[name="prof_nome"]').value,
+          profContato: el.querySelector('[name="prof_contato"]').value,
+          profNasc: el.querySelector('[name="prof_nasc"]').value
+        });
+      });
+
+      const payload = { congregacao, supers, classes };
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        alert('✅ Levantamento enviado com sucesso! Obrigado.');
+        document.getElementById('ebdForm').reset();
+      } catch (err) {
+        alert('❌ Houve um erro ao enviar. Tente novamente.');
+        console.error(err);
+      } finally {
+        btnText.innerText = "Enviar Informações";
+        btnSpinner.classList.add('hidden');
+        btnSubmit.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
