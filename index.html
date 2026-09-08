@@ -5,12 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Levantamento EBD - ADBH Regional São Benedito</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .glass {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-    }
-  </style>
 </head>
 <body class="bg-slate-900 text-slate-800 min-h-screen py-6 px-3 sm:px-6">
 
@@ -23,7 +17,7 @@
         ADBH — Regional São Benedito
       </span>
       <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Levantamento Geral da EBD</h1>
-      <p class="text-blue-200 text-xs sm:text-sm mt-1">Cadastro unificado de Superintendência, Classes e Professores</p>
+      <p class="text-blue-200 text-xs sm:text-sm mt-1">Cadastro unificado de Superintendência, Classes, Professores e Necessidades</p>
     </div>
 
     <!-- Form -->
@@ -32,21 +26,21 @@
       <!-- Seção 1: Congregação -->
       <div class="space-y-3">
         <label class="block text-sm font-bold text-slate-700 uppercase tracking-wider">1. Selecione a Congregação</label>
-<select id="congregacao" required class="w-full p-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none bg-slate-50 text-slate-800 font-medium transition">
-  <option value="">Selecione uma das 12 congregações...</option>
-  <option value="Belo Vale">Belo Vale</option>
-  <option value="Cristina A">Cristina A</option>
-  <option value="Cristina B">Cristina B</option>
-  <option value="Duquesa II">Duquesa II</option>
-  <option value="Nova Conquista">Nova Conquista</option>
-  <option value="Nova Esperança">Nova Esperança</option>
-  <option value="Palmital">Palmital</option>
-  <option value="Palmital A">Palmital A</option>
-  <option value="São Cosme de Baixo">São Cosme de Baixo</option>
-  <option value="São Cosme de Cima">São Cosme de Cima</option>
-  <option value="Savassi">Savassi</option>
-  <option value="Subsede">Subsede</option>
-</select>
+        <select id="congregacao" required class="w-full p-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none bg-slate-50 text-slate-800 font-medium transition">
+          <option value="">Selecione uma das 12 congregações...</option>
+          <option value="Belo Vale">Belo Vale</option>
+          <option value="Cristina A">Cristina A</option>
+          <option value="Cristina B">Cristina B</option>
+          <option value="Duquesa II">Duquesa II</option>
+          <option value="Nova Conquista">Nova Conquista</option>
+          <option value="Nova Esperança">Nova Esperança</option>
+          <option value="Palmital">Palmital</option>
+          <option value="Palmital A">Palmital A</option>
+          <option value="São Cosme de Baixo">São Cosme de Baixo</option>
+          <option value="São Cosme de Cima">São Cosme de Cima</option>
+          <option value="Savassi">Savassi</option>
+          <option value="Subsede">Subsede</option>
+        </select>
       </div>
 
       <!-- Seção 2: Superintendentes -->
@@ -59,7 +53,6 @@
         </div>
 
         <div id="superintendentes-list" class="space-y-3">
-          <!-- Card de Superintendente (Template padrão) -->
           <div class="super-item p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3 relative">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
@@ -88,9 +81,8 @@
           </button>
         </div>
 
-        <div id="classes-list" class="space-y-4">
-          <!-- Card de Classe (Template padrão) -->
-          <div class="classe-item p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
+        <div id="classes-list" class="space-y-6">
+          <div class="classe-item p-4 sm:p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label class="block text-xs font-semibold text-slate-600 mb-1">Classe / Faixa Etária (CPAD)</label>
@@ -115,22 +107,41 @@
               </div>
             </div>
 
-            <div class="border-t border-slate-200 pt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Nome do Professor</label>
-                <input type="text" name="prof_nome" required placeholder="Nome do Professor" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+            <!-- Sub-seção Professores da Classe -->
+            <div class="border-t border-slate-200 pt-3 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wide">Professores desta Classe</span>
+                <button type="button" onclick="addProfessorToClasse(this)" class="text-xs font-semibold text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-md transition">
+                  + Adicionar Professor nesta Classe
+                </button>
               </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">WhatsApp / Telefone</label>
-                <input type="tel" name="prof_contato" required placeholder="(31) 99999-9999" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Data de Nascimento</label>
-                <input type="date" name="prof_nasc" required class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+
+              <div class="professores-container space-y-3">
+                <div class="prof-item grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white p-3 rounded-xl border border-slate-200 relative">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nome do Professor</label>
+                    <input type="text" name="prof_nome" required placeholder="Nome Completo" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">WhatsApp / Telefone</label>
+                    <input type="tel" name="prof_contato" required placeholder="(31) 99999-9999" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Data de Nascimento</label>
+                    <input type="date" name="prof_nasc" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Seção 4: Observações e Necessidades Locais -->
+      <div class="space-y-3 border-t border-slate-200 pt-6">
+        <label class="block text-sm font-bold text-slate-700 uppercase tracking-wider">4. Observações e Necessidades Locais</label>
+        <p class="text-xs text-slate-500">Descreva aqui caso alguma classe não exista por falta de espaço físico, professores ou material didático, ou informe outras necessidades da congregação.</p>
+        <textarea id="observacoes" rows="4" placeholder="Ex: Não temos a classe de Juniores por falta de espaço físico. Precisamos de revista para a classe de Primários..." class="w-full p-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600 outline-none bg-slate-50 text-slate-800 text-sm transition"></textarea>
       </div>
 
       <!-- Submit Button -->
@@ -142,10 +153,9 @@
     </form>
   </div>
 
-  <!-- Script JS -->
   <script>
     // Cole a URL do Web App do Google Apps Script aqui
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzA1JiL6OgcxrHojs_jKmIS0zDyfC87-3Chls6W_5dXclZSOv_Ty3GOL2U0nzwP5cIp/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwK0x8D9VscqSQoljJ_fW41UmNYKb9oNimcUuaL3xJv8j7zMpF3IBLDbxWXWoij_kog/exec';
 
     function addSuperintendente() {
       const list = document.getElementById('superintendentes-list');
@@ -174,10 +184,10 @@
     function addClasse() {
       const list = document.getElementById('classes-list');
       const div = document.createElement('div');
-      div.className = 'classe-item p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3 relative';
+      div.className = 'classe-item p-4 sm:p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4 relative';
       div.innerHTML = `
-        <button type="button" onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1 bg-red-50 rounded">Remover</button>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button type="button" onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1 bg-red-50 rounded">Remover Classe</button>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-20">
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Classe / Faixa Etária (CPAD)</label>
             <select name="classe_faixa" required class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
@@ -200,22 +210,56 @@
             <input type="text" name="classe_nome" placeholder="Ex: Classe Bereia" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
           </div>
         </div>
-        <div class="border-t border-slate-200 pt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Nome do Professor</label>
-            <input type="text" name="prof_nome" required placeholder="Nome do Professor" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+
+        <div class="border-t border-slate-200 pt-3 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-700 uppercase tracking-wide">Professores desta Classe</span>
+            <button type="button" onclick="addProfessorToClasse(this)" class="text-xs font-semibold text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-md transition">
+              + Adicionar Professor nesta Classe
+            </button>
           </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">WhatsApp / Telefone</label>
-            <input type="tel" name="prof_contato" required placeholder="(31) 99999-9999" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Data de Nascimento</label>
-            <input type="date" name="prof_nasc" required class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+
+          <div class="professores-container space-y-3">
+            <div class="prof-item grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white p-3 rounded-xl border border-slate-200 relative">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Nome do Professor</label>
+                <input type="text" name="prof_nome" required placeholder="Nome Completo" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">WhatsApp / Telefone</label>
+                <input type="tel" name="prof_contato" required placeholder="(31) 99999-9999" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Data de Nascimento</label>
+                <input type="date" name="prof_nasc" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+            </div>
           </div>
         </div>
       `;
       list.appendChild(div);
+    }
+
+    function addProfessorToClasse(buttonEl) {
+      const container = buttonEl.parentElement.nextElementSibling;
+      const div = document.createElement('div');
+      div.className = 'prof-item grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white p-3 rounded-xl border border-slate-200 relative';
+      div.innerHTML = `
+        <button type="button" onclick="this.parentElement.remove()" class="absolute -top-2 -right-2 bg-red-100 text-red-600 hover:bg-red-200 rounded-full w-5 h-5 text-xs font-bold flex items-center justify-center">✕</button>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Nome do Professor</label>
+          <input type="text" name="prof_nome" required placeholder="Nome Completo" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">WhatsApp / Telefone</label>
+          <input type="tel" name="prof_contato" required placeholder="(31) 99999-9999" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Data de Nascimento</label>
+          <input type="date" name="prof_nasc" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+      `;
+      container.appendChild(div);
     }
 
     async function submitForm(e) {
@@ -230,6 +274,7 @@
       btnSubmit.disabled = true;
 
       const congregacao = document.getElementById('congregacao').value;
+      const observacoes = document.getElementById('observacoes').value;
 
       // Extrair Superintendentes
       const supers = [];
@@ -241,19 +286,24 @@
         });
       });
 
-      // Extrair Classes
+      // Extrair Classes e seus respectivos Professores
       const classes = [];
       document.querySelectorAll('.classe-item').forEach(el => {
-        classes.push({
-          faixa: el.querySelector('[name="classe_faixa"]').value,
-          nomeTurma: el.querySelector('[name="classe_nome"]').value,
-          profNome: el.querySelector('[name="prof_nome"]').value,
-          profContato: el.querySelector('[name="prof_contato"]').value,
-          profNasc: el.querySelector('[name="prof_nasc"]').value
+        const faixa = el.querySelector('[name="classe_faixa"]').value;
+        const nomeTurma = el.querySelector('[name="classe_nome"]').value;
+
+        el.querySelectorAll('.prof-item').forEach(profEl => {
+          classes.push({
+            faixa: faixa,
+            nomeTurma: nomeTurma,
+            profNome: profEl.querySelector('[name="prof_nome"]').value,
+            profContato: profEl.querySelector('[name="prof_contato"]').value,
+            profNasc: profEl.querySelector('[name="prof_nasc"]').value
+          });
         });
       });
 
-      const payload = { congregacao, supers, classes };
+      const payload = { congregacao, observacoes, supers, classes };
 
       try {
         await fetch(SCRIPT_URL, {
